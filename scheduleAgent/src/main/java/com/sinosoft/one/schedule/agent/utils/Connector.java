@@ -13,12 +13,12 @@ public class Connector {
 
     private ServerInfo serverInfo;
 
-    public Result sendData(ClientInfo clientInfo){
+    public static Result sendData(ClientInfo clientInfo){
         Result result = new Result();
         return result;
     }
 
-    public boolean sendData(JobInfo jobInfo){
+    public static boolean sendData(JobInfo jobInfo){
         return false;
     }
 }

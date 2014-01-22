@@ -1,4 +1,4 @@
-package com.sinosoft.one.schedule.agent.test.plugin;
+package com.sinosoft.one.schedule.agent.plugin;
 
 /**
  * Created by bin on 14-1-21.
