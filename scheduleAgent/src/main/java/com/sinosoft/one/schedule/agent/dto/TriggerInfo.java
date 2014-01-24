@@ -6,9 +6,18 @@ package com.sinosoft.one.schedule.agent.dto;
  */
 public class TriggerInfo {
 
+    private String job;
     private String triggerKey;
     private String triggerName;
     private String cronExpression;
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
 
     public String getTriggerKey() {
         return triggerKey;
