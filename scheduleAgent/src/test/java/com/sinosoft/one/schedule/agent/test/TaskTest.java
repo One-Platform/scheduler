@@ -1,13 +1,19 @@
 package com.sinosoft.one.schedule.agent.test;
 
-import com.sinosoft.one.schedule.agent.core.Task;
+import com.sinosoft.one.schedule.agent.core.JobTask;
+
 
 /**
  * Created by bin on 14-1-24.
  */
-public class TaskTest extends Task{
+public class TaskTest implements JobTask{
+
+
+    private int count;
+
     @Override
-    public void doBiz() throws Throwable {
+    public void execute() {
         System.out.println("TaskTest start");
+        count++;
     }
 }

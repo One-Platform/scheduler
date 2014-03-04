@@ -71,6 +71,7 @@ public class DispatcherTest {
 
     @Test
     public void startTest(){
+
         dispatcher.start();
     }
 

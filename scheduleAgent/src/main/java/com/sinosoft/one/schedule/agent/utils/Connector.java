@@ -11,7 +11,7 @@ import com.sinosoft.one.schedule.agent.dto.ServerInfo;
  */
 public class Connector {
 
-    private ServerInfo serverInfo;
+
 
     public static Result sendData(ClientInfo clientInfo){
         Result result = new Result();

@@ -26,6 +26,6 @@ public class AgentJobListener implements JobListener {
 
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
-       System.out.println("jobListener executed");
+
     }
 }

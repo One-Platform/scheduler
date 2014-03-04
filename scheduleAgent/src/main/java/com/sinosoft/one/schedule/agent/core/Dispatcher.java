@@ -98,34 +98,37 @@ public class Dispatcher {
             List<JobDetail> jobDetails = null;
             try {
                 jobDetails = createJobDetail();
-                if("false".equals(dependOnServer)){
-                    //创建job的trigger
-                    Map<JobDetail,List<Trigger>> jobDetailListMap = null;
-                    try {
-                        if(null!=jobDetailListMap){
-                            jobDetailListMap = createJobTrigger(jobDetails);
-                            Iterator<Map.Entry<JobDetail,List<Trigger>>> iterator = jobDetailListMap.entrySet().iterator();
-                            while (iterator.hasNext()){
-                                Map.Entry<JobDetail,List<Trigger>> entry = iterator.next();
-                                JobDetail jobDetail = entry.getKey();
-                                scheduler.addJob(jobDetail,false);
-                                List<Trigger> triggers = entry.getValue();
-                                for(int i=0;i<triggers.size();i++){
-                                    scheduler.scheduleJob(triggers.get(i));
-                                }
-                            }
-                            scheduler.start();
-                        }
-                    } catch (ScheduleAgentException e) {
-                        logger.error("构建trigger失败"+e.getMessage());
-                    }
-                }else{
-                    //判断网络连接 （未做）
-                    for(int i=0;i<jobDetails.size();i++){
-                        scheduler.addJob(jobDetails.get(i),false);
-                        scheduler.start();
-                    }
-                }
+//                if("false".equals(dependOnServer)){
+//                    //创建job的trigger
+//                    Map<JobDetail,List<Trigger>> jobDetailListMap = null;
+//                    try {
+//                        if(null!=jobDetails){
+//                            jobDetailListMap = createJobTrigger(jobDetails);
+//                            Iterator<Map.Entry<JobDetail,List<Trigger>>> iterator = jobDetailListMap.entrySet().iterator();
+//                            while (iterator.hasNext()){
+//                                Map.Entry<JobDetail,List<Trigger>> entry = iterator.next();
+//                                JobDetail jobDetail = entry.getKey();
+//                                scheduler.addJob(jobDetail,false);
+//                                List<Trigger> triggers = entry.getValue();
+//                                for(int i=0;i<triggers.size();i++){
+//                                    scheduler.scheduleJob(triggers.get(i));
+//                                }
+//                            }
+//                            scheduler.start();
+//                        }else{
+//
+//                        }
+//                    } catch (ScheduleAgentException e) {
+//                        logger.error("构建trigger失败"+e.getMessage());
+//                    }
+//                }else{
+//                    //判断网络连接 （未做）
+//
+//                    for(int i=0;i<jobDetails.size();i++){
+//                        scheduler.addJob(jobDetails.get(i),false);
+//                        scheduler.start();
+//                    }
+//                }
             } catch (ScheduleAgentException e) {
                 logger.error("构建jobDetail失败"+e.getMessage());
             }
@@ -137,7 +140,7 @@ public class Dispatcher {
     /**
      * 初始化properties文件
      */
-     void initProperties() throws ScheduleAgentException {
+     void initProperties() {
        String filename = "quartz.properties";
        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
        try {
@@ -192,7 +195,7 @@ public class Dispatcher {
      * @param trigger
      * @throws ScheduleAgentException
      */
-    void createTriggerFile(String job,String[] trigger) throws ScheduleAgentException {
+    void createTriggerFile(String job,String[] trigger){
         StringBuilder sb = new StringBuilder();
         for(int i=0;i<trigger.length;i++){
             sb.append(trigger+",");
@@ -238,8 +241,9 @@ public class Dispatcher {
                 throw new ScheduleAgentException("jobClass配置不正确");
             }
             try {
-               Task s = (Task)Class.forName(jobClass).newInstance();
-               JobDetail jobDetail = JobBuilder.newJob(s.getClass()).withIdentity(job, job).storeDurably(true).build();
+               JobTask s = (JobTask)Class.forName(jobClass).newInstance();
+               Task t = new Task(s);
+               JobDetail jobDetail = JobBuilder.newJob(t.getClass()).withIdentity(job, job).storeDurably(true).build();
                jobDetails.add(jobDetail);
             } catch (ClassNotFoundException e) {
                 logger.error("jobClass配置不正确"+e.getMessage());
@@ -257,7 +261,7 @@ public class Dispatcher {
      * @param jobDetails
      * @return
      */
-    Map<JobDetail,List<Trigger>> createJobTrigger(List<JobDetail> jobDetails) throws ScheduleAgentException {
+    Map<JobDetail,List<Trigger>> createJobTrigger(List<JobDetail> jobDetails) {
         Map<JobDetail,List<Trigger>> jobTriggerMap = new HashMap<JobDetail, List<Trigger>>();
         for(int i=0;i<jobDetails.size();i++){
             List<Trigger> triggers = new ArrayList<Trigger>();
